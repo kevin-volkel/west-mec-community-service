@@ -29,7 +29,10 @@ const UserSchema = new mongoose.Schema({
   permission: {
     type: String,
     default: 'student',
-    enum: ['student', 'teacher']
+    enum: {
+      values: ['student', 'teacher'],
+      default: 'student'
+    }
   }
 }).pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync());
