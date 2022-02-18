@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from 'axios'
+import { setToken } from "./util/auth";
 
 const login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,9 +21,8 @@ const login = () => {
   const loginUser = async (e) => {
     e.preventDefault();
     try{
-      const user = await axios.post('/api/v1/auth/login', {username: username, password: password})
-      console.log(user)
-      setUser({email: "", username: "", password: ""})
+      const res = await axios.post('/api/v1/auth/login', {username: username, password: password})
+      setToken(res.data)
     } catch (err) {
       console.error(err)
     }
@@ -31,9 +31,8 @@ const login = () => {
   const registerUser = async (e) => {
     e.preventDefault();
     try{
-      const user = await axios.post('/api/v1/auth/register', {username: username, password: password, email: email})
-      console.log(user)
-      setUser({email: "", username: "", password: ""})
+      const res = await axios.post('/api/v1/auth/register', user)
+      setToken(res.data)
     } catch (err) {
       console.error(err)
     }

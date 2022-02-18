@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 
     const payload = jwt.verify(auth, process.env.JWT_SECRET)
 
-    req.user = { userID: payload.userID, username: payload.username, permission: payload.permission };
+    req.user = { userId: payload.userId, username: payload.username, permission: payload.permission };
     next();
 
   } catch (err) {

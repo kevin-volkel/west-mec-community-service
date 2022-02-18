@@ -25,10 +25,10 @@ const ServiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    userID: {
+    userId: {
       ref: "User",
       type: mongoose.Types.ObjectId,
-      required: [true, "Provide userID"],
+      required: [true, "Provide userId"],
     },
   },
   { timestamps: true }

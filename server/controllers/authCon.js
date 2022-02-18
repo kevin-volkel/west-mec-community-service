@@ -19,7 +19,7 @@ const login = async (req, res) => {
     const token = userLogin.createJWT();
     res
       .status(200)
-      .json({ user: { username: userLogin.username, id: userLogin._id }, token });
+      .json(token);
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error')
@@ -27,7 +27,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const {email, username, password} = req.body
+  const {email, password} = req.body
 
   if (!isEmail(email)) return res.status(401).send('Invalid Email');
   if (password.length < 8)
@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
     const newUser = await User.create(req.body);
     const token = newUser.createJWT();
-    res.status(200).json({ user: { username: newUser.username }, token });
+    res.status(200).json(token);
   } catch (err) {
     console.error(err);
     return res.status(500).send('Server Error')
@@ -57,10 +57,8 @@ const getUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { id } = req.params;
-  const { permission } = req.user;
-  if (permission !== "teacher") return res.status(401).send('Invalid Permissions')
-  const user = await User.findById(id);
+  const { userId } = req.user;
+  const user = await User.findById(userId);
   res.status(200).json({ user });
 };
 
@@ -74,7 +72,7 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id: paramID } = req.params;
-  const { permission, userID, username } = req.user;
+  const { permission, userId, username } = req.user;
   const {
     password: newPass,
     username: newUsername,
@@ -89,8 +87,8 @@ const updateUser = async (req, res) => {
     if (reqPerm) {
       if (userObject.permission !== reqPerm) return res.status(401).send('Invalid Permissions')
     }
-    if (userID !== paramID) {
-      console.log(userID, paramID);
+    if (userId !== paramID) {
+      console.log(userId, paramID);
       return res.status(401).send('Invalid Permissions')
     }
   }
@@ -112,4 +110,4 @@ const updateUser = async (req, res) => {
   res.status(200).json(updatedUser);
 };
 
-module.exports = { login, register, getUsers, getUser, deleteUser, updateUser };
+module.exports = { login, register, getUser, deleteUser, updateUser };
