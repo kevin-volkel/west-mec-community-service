@@ -59,7 +59,7 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   const { userId } = req.user;
   const user = await User.findById(userId);
-  res.status(200).json({ user });
+  res.status(200).json(user);
 };
 
 const deleteUser = async (req, res) => {

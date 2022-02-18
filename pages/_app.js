@@ -6,7 +6,6 @@ import "semantic-ui-css/semantic.min.css";
 import "../styles/login.css";
 import "../styles/globals.css";
 import { baseURL, redirectUser } from "./util/auth";
-import { Component } from "react";
 import axios from "axios";
 
 function MyApp({ Component, pageProps }) {
@@ -16,7 +15,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       {!isLogin ? (
-        <Layout>
+        <Layout user={pageProps.user}>
           <HeadTag />
           <Component {...pageProps} />
         </Layout>
@@ -51,9 +50,10 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
         }
       });
 
-      const { user } = res.data;
+      const user = res.data;
 
       if(user) !isProtectedRoute && redirectUser(ctx, '/')
+      // console.log(user);
       pageProps.user = user;
     } catch (err) {
       console.error(err)
