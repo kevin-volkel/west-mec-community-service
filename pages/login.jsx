@@ -4,6 +4,7 @@ import { setToken } from "./util/auth";
 
 const login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [formLoading, setFormLoading] = useState(false)
 
   const [user, setUser] = useState({
     username: "",
@@ -20,12 +21,14 @@ const login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
+    setFormLoading(true)
     try{
       const res = await axios.post('/api/v1/auth/login', {username: username, password: password})
       setToken(res.data)
     } catch (err) {
       console.error(err)
     }
+    setFormLoading(false)
   }
 
   const registerUser = async (e) => {
@@ -111,6 +114,7 @@ const login = () => {
             id={isLogin ? "login-submit-button" : "reg-submit-button"}
             type="submit"
             className="submit-button"
+            style={{cursor: 'pointer'}}
             onClick={isLogin ? loginUser : registerUser}
           >
             {isLogin ? "Login" : "Register"}
@@ -121,6 +125,7 @@ const login = () => {
               e.preventDefault();
               setIsLogin(!isLogin);
             }}
+            style={{cursor: 'pointer'}}
           >
             {isLogin ? "Need to Register?" : "Already Have an Account?"}{" "}
           </button>

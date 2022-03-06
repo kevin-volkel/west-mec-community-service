@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ServiceSchema = new mongoose.Schema(
   {
-    act: {
+    title: {
       type: String,
       required: true,
     },
@@ -25,7 +25,7 @@ const ServiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    userId: {
+    user: {
       ref: "User",
       type: mongoose.Types.ObjectId,
       required: [true, "Provide userId"],

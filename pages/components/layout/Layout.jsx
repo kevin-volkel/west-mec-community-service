@@ -12,12 +12,12 @@ const Layout = ({ children, user }) => {
     <div style={{ marginLeft: '1rem', marginRight: '1rem'}}>
       <Ref innerRef={contextRef}>
         <Grid>
-          <Grid.Column width={2}>
+          <Grid.Column width={3}>
             <Sticky context={contextRef}>
               <Navbar user={user} />
             </Sticky>
           </Grid.Column>
-          <Grid.Column width={5}>
+          <Grid.Column width="10">
             <Visibility context={contextRef}>
               {children}
             </Visibility>

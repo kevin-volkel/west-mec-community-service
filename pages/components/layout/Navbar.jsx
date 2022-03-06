@@ -16,7 +16,7 @@ const Navbar = ({ user: {email, username} }) => {
       className="navbar"
     >
       <Link href="/">
-        <List.Item active={isActive('/')}>
+        <List.Item active={isActive('/')} style={{marginBottom: "1rem"}}>
           <Icon 
             name="home"
             size="large"
@@ -28,14 +28,26 @@ const Navbar = ({ user: {email, username} }) => {
         </List.Item>
       </Link>
       <Link href="/services">
-        <List.Item active={isActive('/services')}>
+        <List.Item active={isActive('/services')} style={{marginBottom: "1rem"}}>
           <Icon 
             name="clipboard"
             size="large"
             color={isActive('/services') ? 'orange' : 'grey'}
           />
           <List.Content>
-            <List.Header content="Services" />
+            <List.Header content="Your Services" />
+          </List.Content>
+        </List.Item>
+      </Link>
+      <Link href="/submit">
+        <List.Item active={isActive('/submit')} style={{marginBottom: "1rem"}}>
+          <Icon 
+            name="edit"
+            size="large"
+            color={isActive('/submit') ? 'orange' : 'grey'}
+          />
+          <List.Content>
+            <List.Header content="Submit" />
           </List.Content>
         </List.Item>
       </Link>

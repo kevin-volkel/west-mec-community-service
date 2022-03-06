@@ -33,21 +33,9 @@ const nextApp = next({ dev });
 //! this is a built-in next router that will handle all requests made to the server
 const handler = nextApp.getRequestHandler();
 
-const minutes = 1000 * 60
-
 //* Middlewares
 app.use(express.json());
-// app.set('trust proxy', 1)
-//   .use(
-//     rateLimiter({
-//       windowMs: 15 * minutes,
-//       max: 100
-//     })
-//     )
 app.use(fileUpload({ useTempFiles: true }));
-// app.use(helmet())
-// app.use(cors())
-// app.use(xss())
 
 
 //! ROUTERS
