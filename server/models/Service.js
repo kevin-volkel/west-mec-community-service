@@ -22,7 +22,7 @@ const ServiceSchema = new mongoose.Schema(
       type: String,
     },
     hours: {
-      type: String,
+      type: Number,
       required: true,
     },
     user: {

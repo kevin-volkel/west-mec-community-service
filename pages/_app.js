@@ -53,7 +53,6 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
       const user = res.data;
 
       if(user) !isProtectedRoute && redirectUser(ctx, '/')
-      // console.log(user);
       pageProps.user = user;
     } catch (err) {
       console.error(err)

@@ -1,11 +1,17 @@
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import Link from 'next/link'
-import { List, Divider, Icon } from 'semantic-ui-react'
+import { List, Divider, Icon, ListDescription } from 'semantic-ui-react'
+import Cookies from 'js-cookie';
 
-const Navbar = ({ user: {email, username} }) => {
+const Navbar = ({ user: { username, permission} }) => {
 
   const router = useRouter();
   const isActive = (route) => router.pathname === route;
+
+  const logoutUser = () => {
+    Cookies.remove('token')
+    Router.push('/login')
+  } 
 
   return <>
     <List
@@ -35,7 +41,7 @@ const Navbar = ({ user: {email, username} }) => {
             color={isActive('/services') ? 'orange' : 'grey'}
           />
           <List.Content>
-            <List.Header content="Your Services" />
+            <List.Header content={permission === 'teacher' ? 'All Services' : 'Your Services'} />
           </List.Content>
         </List.Item>
       </Link>
@@ -51,6 +57,18 @@ const Navbar = ({ user: {email, username} }) => {
           </List.Content>
         </List.Item>
       </Link>
+      <List.Item
+        onClick={logoutUser}
+      >
+        <Icon 
+          name="sign out"
+          size="large"
+          color="grey"
+        />
+        <List.Content>
+          <List.Header content="Log Out"/>
+        </List.Content>
+      </List.Item>
     </List>
   </>
 }

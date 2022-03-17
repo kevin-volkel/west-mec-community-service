@@ -9,9 +9,21 @@ const createService = async (req, res) => {
 };
 
 const getServices = async (req, res) => {
-  const services = await Service.find();
-  if (!services) return res.status(401).send('Bad Request')
-  res.status(200).json({services});
+  try {
+    const { userId, permission } = req.user;
+    if(permission === 'teacher') {
+      const services = await Service.find();
+      if (!services) return res.status(401).send('Bad Request')
+      res.status(200).json({services});
+    } else {
+      const services = await Service.find({user: userId})
+      if (!services) return res.status(401).send('Bad Request')
+      res.status(200).json({services});
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(401).send('error @ getServices')
+  }
 };
 
 const getService = async (req, res) => {

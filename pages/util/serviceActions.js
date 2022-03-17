@@ -23,3 +23,14 @@ export const createService = async (
     setError(err)
   }
 }
+
+export const getServices = async (
+  userId
+) => {
+  try {
+    const res = await serviceAxios.get('/')
+    return res.data.services.filter( (service) => service.user === userId)
+  } catch (err) {
+    console.error(err)
+  }
+}

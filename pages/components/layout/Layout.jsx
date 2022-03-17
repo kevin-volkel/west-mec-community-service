@@ -17,7 +17,7 @@ const Layout = ({ children, user }) => {
               <Navbar user={user} />
             </Sticky>
           </Grid.Column>
-          <Grid.Column width="10">
+          <Grid.Column width={13}>
             <Visibility context={contextRef}>
               {children}
             </Visibility>

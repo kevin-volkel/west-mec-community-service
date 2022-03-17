@@ -120,6 +120,7 @@ const login = () => {
             {isLogin ? "Login" : "Register"}
           </button>
           <button
+            type="submit"
             id="swap-btn"
             onClick={(e) => {
               e.preventDefault();
