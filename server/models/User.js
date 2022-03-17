@@ -4,6 +4,16 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Please provide your first and last name'],
+    validate: {
+      validator: function(v) {
+        return / /g.test(v)
+      },
+      message: 'Name must contain first and last name separated by a space'
+    }
+  },
   username: {
     type: String,
     required: [true, 'Please provide a username'],

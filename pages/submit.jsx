@@ -16,7 +16,6 @@ const submit = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    console.log(proof);
 
     if (name == "proof" && files.length) {
       setProof(() => files[0]);

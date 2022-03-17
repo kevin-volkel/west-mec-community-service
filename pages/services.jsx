@@ -107,7 +107,7 @@ const services = ({ services, user: { permission }, students }) => {
                     disabled={formLoading}
                     options={students.map((student) => ({
                       key: student._id,
-                      text: student.username,
+                      text: student.name,
                       value: student._id,
                     }))}
                     onChange={handleChange}
@@ -135,7 +135,7 @@ services.getInitialProps = async (ctx) => {
     });
     const students = users.data.users.filter(
       (user) => user.permission === "student"
-    );
+    ).sort( (a, b) => a.name.split(' ')[1].localeCompare(b.name.split(' ')[1]))
     return { services: res.data.services, students };
   } catch (err) {
     console.error(err);
