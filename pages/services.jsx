@@ -30,6 +30,28 @@ const services = ({ services, user: { permission }, students }) => {
     },
   ];
 
+  const approvedColor = (value) => {
+    switch (value) {
+      case "approved":
+        return {
+          background: "#07BE1C",
+          textTransform: "capitalize",
+        };
+      case "pending":
+        return {
+          background: "yellow",
+          textTransform: "capitalize",
+        };
+      case "denied":
+        return {
+          background: "red",
+          textTransform: "capitalize",
+        };
+      default:
+        return {};
+    }
+  };
+
   const [serviceList, setServiceList] = useState(services);
   const [studentServices, setStudentServices] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
@@ -45,28 +67,16 @@ const services = ({ services, user: { permission }, students }) => {
         <Table.Cell>{proof ? "proof" : "no proof"}</Table.Cell>
         {isTeacher ? (
           <>
-            <Table.Cell
-              style={
-                reviewed == "approved"
-                  ? {
-                      background: "#07BE1C",
-                      textTransform: "capitalize",
-                    }
-                  : reviewed == "denied"
-                  ? {
-                      background: "red",
-                      textTransform: "capitalize",
-                    }
-                  : {
-                      background: "yellow",
-                      textTransform: "capitalize",
-                    }
-              }
-            >
+            <Table.Cell style={approvedColor(reviewed)}>
               <Form.Select
+                style={{...approvedColor(reviewed), border: 'none', width: '100%'}}
                 options={approvalOptions}
-                onChange={ async (e, data) => {
-                  await updateApproval(service._id, setStudentServices, data.value);
+                onChange={async (e, data) => {
+                  await updateApproval(
+                    service._id,
+                    setStudentServices,
+                    data.value
+                  );
                 }}
                 value={reviewed}
               />
@@ -74,26 +84,7 @@ const services = ({ services, user: { permission }, students }) => {
           </>
         ) : (
           <>
-            <Table.Cell
-              style={
-                reviewed == "approved"
-                  ? {
-                      background: "#07BE1C",
-                      textTransform: "capitalize",
-                    }
-                  : reviewed == "denied"
-                  ? {
-                      background: "red",
-                      textTransform: "capitalize",
-                    }
-                  : {
-                      background: "yellow",
-                      textTransform: "capitalize",
-                    }
-              }
-            >
-              {reviewed}
-            </Table.Cell>
+            <Table.Cell style={approvedColor(reviewed)}>{reviewed}</Table.Cell>
           </>
         )}
 
