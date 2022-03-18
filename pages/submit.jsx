@@ -9,6 +9,7 @@ const submit = () => {
     hours: 0,
     description: "",
   });
+
   const [proof, setProof] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +19,7 @@ const submit = () => {
     const { name, value, files } = e.target;
 
     if (name == "proof" && files.length) {
+      console.log(files[0]);
       setProof(() => files[0]);
     } else {
       setNewService((prev) => ({ ...prev, [name]: value }));
@@ -30,8 +32,8 @@ const submit = () => {
     e.preventDefault();
     setLoading(true);
     let picURL;
-
     if (proof) {
+      console.log(proof);
       const formData = new FormData();
       formData.append("image", proof, {
         headers: {
@@ -39,8 +41,8 @@ const submit = () => {
         },
       });
       const res = await axios.post("/api/v1/upload", formData);
+      console.log(res.data);
       picURL = res.data.src;
-      console.log(picURL);
     }
 
     await createService(title, hours, description, picURL, setError);

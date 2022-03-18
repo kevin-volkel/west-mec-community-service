@@ -1,5 +1,9 @@
-import { Form, Table } from "semantic-ui-react";
-import { getServices } from "./util/serviceActions";
+import { Form, Icon, Table } from "semantic-ui-react";
+import {
+  getServices,
+  deleteService,
+  updateApproval,
+} from "./util/serviceActions";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { baseURL } from "./util/auth";
@@ -7,12 +11,31 @@ import { useState } from "react";
 
 const services = ({ services, user: { permission }, students }) => {
   const isTeacher = permission === "teacher";
+
+  const approvalOptions = [
+    {
+      key: 1,
+      text: "Approved",
+      value: "approved",
+    },
+    {
+      key: 2,
+      text: "Pending",
+      value: "pending",
+    },
+    {
+      key: 3,
+      text: "Denied",
+      value: "denied",
+    },
+  ];
+
+  const [serviceList, setServiceList] = useState(services);
   const [studentServices, setStudentServices] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
 
   const generateRow = (service) => {
     const { title, description, hours, createdAt, proof, reviewed } = service;
-
     return (
       <Table.Row key={service._id}>
         <Table.Cell>{title}</Table.Cell>
@@ -20,25 +43,75 @@ const services = ({ services, user: { permission }, students }) => {
         <Table.Cell>{hours}</Table.Cell>
         <Table.Cell>{createdAt.split("T")[0]}</Table.Cell>
         <Table.Cell>{proof ? "proof" : "no proof"}</Table.Cell>
-        <Table.Cell
-          style={
-            reviewed == "approved"
-              ? {
-                  background: "#07BE1C",
-                  textTransform: "capitalize",
-                }
-              : reviewed == "denied"
-              ? {
-                  background: "red",
-                  textTransform: "capitalize",
-                }
-              : {
-                  background: "yellow",
-                  textTransform: "capitalize",
-                }
-          }
-        >
-          {reviewed}
+        {isTeacher ? (
+          <>
+            <Table.Cell
+              style={
+                reviewed == "approved"
+                  ? {
+                      background: "#07BE1C",
+                      textTransform: "capitalize",
+                    }
+                  : reviewed == "denied"
+                  ? {
+                      background: "red",
+                      textTransform: "capitalize",
+                    }
+                  : {
+                      background: "yellow",
+                      textTransform: "capitalize",
+                    }
+              }
+            >
+              <Form.Select
+                options={approvalOptions}
+                onChange={ async (e, data) => {
+                  await updateApproval(service._id, setStudentServices, data.value);
+                }}
+                value={reviewed}
+              />
+            </Table.Cell>
+          </>
+        ) : (
+          <>
+            <Table.Cell
+              style={
+                reviewed == "approved"
+                  ? {
+                      background: "#07BE1C",
+                      textTransform: "capitalize",
+                    }
+                  : reviewed == "denied"
+                  ? {
+                      background: "red",
+                      textTransform: "capitalize",
+                    }
+                  : {
+                      background: "yellow",
+                      textTransform: "capitalize",
+                    }
+              }
+            >
+              {reviewed}
+            </Table.Cell>
+          </>
+        )}
+
+        <Table.Cell width={1}>
+          <Icon
+            name="trash"
+            color="red"
+            onClick={() => {
+              setFormLoading(true);
+              if (permission === "teacher") {
+                deleteService(service._id, setStudentServices);
+              } else {
+                deleteService(service._id, setServiceList);
+              }
+              setFormLoading(false);
+            }}
+            style={{ cursor: "pointer" }}
+          />
         </Table.Cell>
       </Table.Row>
     );
@@ -49,7 +122,7 @@ const services = ({ services, user: { permission }, students }) => {
     const userId = data.value;
     if (!userId) setStudentServices(null);
     const newServices = await getServices(userId);
-    console.log(newServices);
+    // console.log(newServices);
     setStudentServices(newServices);
     setFormLoading(false);
   };
@@ -65,19 +138,20 @@ const services = ({ services, user: { permission }, students }) => {
             <Table.HeaderCell>Date</Table.HeaderCell>
             <Table.HeaderCell>Proof</Table.HeaderCell>
             <Table.HeaderCell>Approved</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {!isTeacher ? (
-            services.length == 0 ? (
+            serviceList.length == 0 ? (
               <Table.Row>
                 <Table.Cell colSpan={6} textAlign="center">
                   You have submitted no services
                 </Table.Cell>
               </Table.Row>
             ) : (
-              <>{services.map((service) => generateRow(service))}</>
+              <>{serviceList.map((service) => generateRow(service))}</>
             )
           ) : studentServices === null ? (
             <>
@@ -133,9 +207,9 @@ services.getInitialProps = async (ctx) => {
     const users = await axios.get(`${baseURL}/api/v1/auth/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const students = users.data.users.filter(
-      (user) => user.permission === "student"
-    ).sort( (a, b) => a.name.split(' ')[1].localeCompare(b.name.split(' ')[1]))
+    const students = users.data.users
+      .filter((user) => user.permission === "student")
+      .sort((a, b) => a.name.split(" ")[1].localeCompare(b.name.split(" ")[1]));
     return { services: res.data.services, students };
   } catch (err) {
     console.error(err);

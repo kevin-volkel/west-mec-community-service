@@ -34,16 +34,17 @@ const getService = async (req, res) => {
 };
 
 const deleteService = async (req, res) => {
-  const { permission } = req.user;
+  const { permission, userId } = req.user;
   const { id } = req.params;
 
   const serviceCheck = await Service.findById(id)
+  console.log(serviceCheck);
 
-  if (permission === "student" && userId !== serviceCheck.user) return res.status(401).send('Invalid Permissions')
-  const services = await Service.findByIdAndDelete(id);
+  if (permission === "student" && userId !== serviceCheck.user.toString()) return res.status(401).send('Invalid Permissions')
+  const service = await Service.findByIdAndDelete(id);
 
-  if (!services) return res.status(401).send('Bad Request')
-  res.status(200).json(services);
+  if (!service) return res.status(401).send('Bad Request')
+  res.status(200).json(service);
 };
 
 const updateService = async (req, res) => {
@@ -52,7 +53,7 @@ const updateService = async (req, res) => {
 
 	const serviceCheck = await Service.findById(id)
 
-  if (permission === "student" && userId !== serviceCheck.user) return res.status(401).send('Invalid Permissions')
+  if (permission === "student" && userId !== serviceCheck.user.toString()) return res.status(401).send('Invalid Permissions')
   const services = await Service.findByIdAndUpdate(id, req.body, {
 		new: true,
 		runValidators: true,
